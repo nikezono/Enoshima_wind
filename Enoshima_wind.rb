@@ -48,31 +48,17 @@ puts "現在時刻:#{time.hour}時"
 arduino.digital_write 5,true
 arduino.digital_write 4,false
 arduino.analog_write 3,value * 6 #速度
-#arduino.analog_write 3,255
+#arduino.analog_write 3,50
+puts "Arduino：Analog_write 3(Motor),Value:#{value*6}"
 
 #現在時刻に応じてLEDの光量を変化させる
 diff = 14 - time.hour#14時を最大の照度とする
-arduino.analog_write 11,(255-diff.abs*15) if diff >= 0
-arduino.analog_write 11, (255-diff.abs*30) if diff < 0
+diff = 255 - diff.abs*15 if diff >= 0
+diff = 255 - diff.abs * 30 if diff < 0
+arduino.analog_write 11,diff
+puts "Arduino: Analog_write 11(Light),Value:#{diff}"
 
-#風向きに応じてPhidgets-servoの向きを変化させる
-servo = Phidgets::AdvancedServo.new
-
-servo.on_attach do |device, obj|
-puts "#{device.device_class} attached"
-device.advanced_servos[0].engaged = true
-device.advanced_servos[0].type = Phidgets::FFI::ServoType[:default]
-end
-
-servo.on_position_change do |device, motor, position|
-puts "servo[#{motor.index}] => #{position}"
-end
-
-
-
-sleep 5
-
-if servo.attached?
+#風向きに応じてservoの向きを変化させる
 
 if direction == "東" then
 setDirection = 93 
@@ -110,17 +96,6 @@ end
 
 #30~105
 #S120 NE90 N82 E98    
-max = servo.advanced_servos[0].position_max
-  1.times do
-#servo.advanced_servos[0].position = rand(180)
-  servo.advanced_servos[0].position = setDirection
-  sleep 3.5
-  ii = 30
-  servo.advanced_servos[0].position = ii
-  sleep 1.5
-  end
-  else
-  puts 'device not found'
-  end
-
+arduino.servo_write 9,setDirection
+puts "Arduino: Digital_write 9(Servo),Value:#{setDirection}"
 
