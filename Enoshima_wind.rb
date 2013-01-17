@@ -15,6 +15,7 @@ require 'phidgets-ffi'
 arduino = ArduinoFirmata.connect  #"/dev/tty.usbmodem411"
 puts "Connect Arduino Version : #{arduino.version}"
 
+puts arduino.digital_read 0
 #initialize
 value = 0
 direction = 0
@@ -47,16 +48,16 @@ puts "現在時刻:#{time.hour}時"
 
 arduino.digital_write 5,true
 arduino.digital_write 4,false
-arduino.analog_write 3,value * 6 #速度
-#arduino.analog_write 3,50
+arduino.analog_write 3,value * 10 if value >= 3#速度 
+#arduino.analog_write 3,255
 puts "Arduino：Analog_write 3(Motor),Value:#{value*6}"
 
 #現在時刻に応じてLEDの光量を変化させる
 diff = 14 - time.hour#14時を最大の照度とする
 diff = 255 - diff.abs*15 if diff >= 0
-diff = 255 - diff.abs * 30 if diff < 0
-arduino.analog_write 11,diff
-puts "Arduino: Analog_write 11(Light),Value:#{diff}"
+diff = 255 - diff.abs*30 if diff <= 0
+puts "Arduino: Analog_write 11(Light),Value:#{diff.abs}"
+arduino.analog_write 11,diff.abs
 
 #風向きに応じてservoの向きを変化させる
 
