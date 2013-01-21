@@ -97,10 +97,6 @@ end
 
 #30~105
 #S120 NE90 N82 E98
-arduino.servo_write 9,180
-sleep 3.0
-arduino.servo_write 9,0
-sleep 3.0
 arduino.servo_write 9,setDirection
 puts "Arduino: Digital_write 9(Servo),Value:#{setDirection}"
 
