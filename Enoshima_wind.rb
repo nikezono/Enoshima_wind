@@ -48,7 +48,7 @@ puts "現在時刻:#{time.hour}時"
 
 arduino.digital_write 5,true
 arduino.digital_write 4,false
-arduino.analog_write 3,value * 10 if value >= 3#速度 
+arduino.analog_write 3,value * 15 if value >= 3#速度 
 #arduino.analog_write 3,255
 puts "Arduino：Analog_write 3(Motor),Value:#{value*6}"
 
@@ -96,7 +96,11 @@ setDirection = 58
 end  
 
 #30~105
-#S120 NE90 N82 E98    
+#S120 NE90 N82 E98
+arduino.servo_write 9,180
+sleep 3.0
+arduino.servo_write 9,0
+sleep 3.0
 arduino.servo_write 9,setDirection
 puts "Arduino: Digital_write 9(Servo),Value:#{setDirection}"
 
